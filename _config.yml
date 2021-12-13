@@ -1,7 +1,7 @@
 # The Site Configuration
 
 # Import the theme
- theme: jekyll-theme-chirpy
+theme: jekyll-theme-chirpy
 
 # Change the following value to '/PROJECT_NAME' ONLY IF your site type is GitHub Pages Project sites
 # and doesn't have a custom domain.
@@ -35,11 +35,11 @@ social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
   name: ludacirs
-  email: iknowjsnow@gmail.com             # change to your email address
+  email: iknowjsnow@gmail.com
   links:
     # The first element serves as the copyright owner's link
-    - https://github.com/ludacirs      # change to your twitter homepage
-    - https://github.com/ludacirs       # change to your github homepage
+    - https://twitter.com/username      # change to your twitter homepage
+    - https://github.com/ludacirs      # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
@@ -74,7 +74,7 @@ theme_mode:   # [light|dark]
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn: '/'
+img_cdn: 'https://cdn.jsdelivr.net/gh/cotes2020/chirpy-images@0a003683c0c3ca549d12c309f9b3e03ea20981e5'
 
 # the avatar on sidebar, support local or CORS resources
 avatar: '/commons/avatar.jpg'
@@ -163,5 +163,3 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
-
-plugins: ['jekyll-paginate']

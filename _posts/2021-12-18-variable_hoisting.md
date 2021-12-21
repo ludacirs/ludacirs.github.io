@@ -5,8 +5,6 @@ link: https://github.com/ludacirs
 date: 2021-12-18 17:56:00 +0900
 categories: [JavaScript, Quiz]
 tags: [Quiz, hoisting, TDZ]
-pin: true
-
 ---
 
 # var, let, const

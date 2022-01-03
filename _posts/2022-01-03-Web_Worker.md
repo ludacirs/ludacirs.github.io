@@ -2,7 +2,7 @@
 title: iterator
 name: ludacirs
 link: https://github.com/ludacirs
-date: 2021-12-20 15:36:00 +0900
+date: 2022-01-03 22:46:00 +0900
 categories: [JavaScript, Quiz]
 tags: [Quiz, WebWorker]
 ---

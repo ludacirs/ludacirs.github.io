@@ -1,5 +1,5 @@
 ---
-title: var, let, const, 호이스팅
+title: Get, Post, Cache
 name: ludacirs
 link: https://github.com/ludacirs
 date: 2021-12-19 22:01:00 +0900

@@ -1,5 +1,5 @@
 ---
-title: iterator
+title: Web Worker
 name: ludacirs
 link: https://github.com/ludacirs
 date: 2022-01-03 22:46:00 +0900

@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="day-prompt" content="days ago"><meta name="hour-prompt" content="hours ago"><meta name="minute-prompt" content="minutes ago"><meta name="justnow-prompt" content="just now"><title>자바스크립트의 Object | Dev Note</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Dev Note"><meta name="application-name" content="Dev Note"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } let self = this; /* always follow the system prefers */ this.sysDarkPrefers.addEventListener("change", () => { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.updateMermaid(); }); } /* constructor() */ get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode === ModeToggle.DARK_MODE; } get isLightMode() { return this.mode === ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer)) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } setDark() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_KEY); sessionStorage.removeItem(ModeToggle.MODE_KEY); } updateMermaid() { if (typeof mermaid !== "undefined") { let expectedTheme = (this.modeStatus === ModeToggle.DARK_MODE? "dark" : "default"); let config = { theme: expectedTheme }; /* re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function() { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } } /* ModeToggle */ const toggle = new ModeToggle(); function flipMode() { if (toggle.hasMode) { if (toggle.isSysDarkPrefer) { if (toggle.isLightMode) { toggle.clearMode(); } else { toggle.setLight(); } } else { if (toggle.isDarkMode) { toggle.clearMode(); } else { toggle.setDark(); } } } else { if (toggle.isSysDarkPrefer) { toggle.setLight(); } else { toggle.setDark(); } } toggle.updateMermaid(); } /* flipMode() */ </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end" lang="en"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src="https://ludacirs.github.io/assets/avatar.webp" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Dev Note</a></div><div class="site-subtitle font-italic">개발 이모저모</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <button class="mode-toggle btn" aria-label="Switch Mode"> <i class="fas fa-adjust"></i> </button> <span class="icon-border"></span> <a href="https://github.com/ludacirs" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['iknowjsnow','gmail.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>자바스크립트의 Object</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>자바스크립트의 Object</h1><div class="post-meta text-muted"><div> By <em> <a href="https://twitter.com/username">ludacirs</a> </em></div><div class="d-flex"><div> <span> Posted <em class="timeago" date="2021-12-16 01:46:00 +0900" data-toggle="tooltip" data-placement="bottom" title="Thu, Dec 16, 2021, 1:46 AM +0900" >Dec 16, 2021</em> </span> <span> Updated <em class="timeago" date="2021-12-21 23:43:26 +0900 " data-toggle="tooltip" data-placement="bottom" title="Tue, Dec 21, 2021, 11:43 PM +0900" >Dec 21, 2021</em> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="2055 words"> <em>11 min</em> read</span></div></div></div><div class="post-content"><p>원래는 부트캠프 막바지에 마스터님께서 퀴즈로 내어주신 <code class="language-plaintext highlighter-rouge">Object.create의 역할은 무엇인가요?</code>에 대해서 포스팅하려고 했는데 찾아보니 분량이 너무 적은 것 같아서 Object를 전반적으로 포스팅하려고 한다.</p><h1 id="object">Object</h1><h2 id="객체-생성하기">객체 생성하기<a href="#객체-생성하기"><i class="fas fa-hashtag"></i></a></h2></h2><p>자바스크립트에서 객체를 만드는 방법은 다음과 같다.</p><ul><li><p>생성자를 사용한 생성 방법</p><p><code class="language-plaintext highlighter-rouge">const obj = new Object({a:1})</code></p><li><p>객체 리터럴을 이용한 생성 방법</p><p><code class="language-plaintext highlighter-rouge">const obj = {a:1}</code></p></ul><p>두 방법 다 동일한 모양의 객체를 생성한다.</p><ul><li><p><code class="language-plaintext highlighter-rouge">Object.create()</code>를 이용한 방법</p><p>아래에서 좀 더 자세히 살펴보자</p></ul><h2 id="objectassign">Object.assign()<a href="#objectassign"><i class="fas fa-hashtag"></i></a></h2></h2><blockquote><p>복사하려는 객체의 모든 열거 가능한 자체 속성을 복사해 대상 객체에 붙여넣습니다. 그 후 대상 객체를 반환합니다.</p></blockquote><p>여기서 열거 가능한 자체 속성이란 <code class="language-plaintext highlighter-rouge">for...in</code>으로 불러올 수 있는 프로퍼티 중 프로토타입 체인을 확인하지 않고 자신만의 직접적인 프로퍼티를 말한다.</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">target</span> <span class="o">=</span> <span class="p">{</span> <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">b</span><span class="p">:</span> <span class="mi">2</span> <span class="p">};</span>
+<span class="kd">const</span> <span class="nx">source</span> <span class="o">=</span> <span class="p">{</span> <span class="na">b</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="na">c</span><span class="p">:</span> <span class="mi">5</span> <span class="p">};</span>
+
+<span class="kd">const</span> <span class="nx">returnedTarget</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">source</span><span class="p">);</span>
+
+<span class="c1">//target : { a: 1, b: 4, c: 5 }</span>
+<span class="c1">//returnedTarget : { a: 1, b: 4, c: 5 }</span>
+</pre></table></code></div></div><h3 id="주의-사항">주의 사항<a href="#주의-사항"><i class="fas fa-hashtag"></i></a></h3></h3><p>assign은 깊은 복사일까? 얕은 복사일까?</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">obj1</span> <span class="o">=</span> <span class="p">{</span> <span class="na">a</span><span class="p">:</span> <span class="mi">0</span> <span class="p">,</span> <span class="na">b</span><span class="p">:</span> <span class="p">{</span> <span class="na">c</span><span class="p">:</span> <span class="mi">0</span><span class="p">}};</span>
+<span class="kd">const</span> <span class="nx">obj2</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">obj1</span><span class="p">);</span>
+
+<span class="nx">obj1</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="c1">// obj1 { a: 3 , b: { c: 0}};</span>
+<span class="c1">// obj2 { a: 0 , b: { c: 0}};</span>
+</pre></table></code></div></div><p>객체를 그대로 복사해와서 <code class="language-plaintext highlighter-rouge">obj1.a</code>의 값을 변경했는데 <code class="language-plaintext highlighter-rouge">obj2.a</code>의 값이 변경되지 않았다.</p><p>이 코드만 보면 assign은 깊은 복사인 것 같다. 다음 코드를 이어서 보자</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="nx">obj1</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="c1">// obj1 { a: 3 , b: { c: 3}};</span>
+<span class="c1">// obj2 { a: 0 , b: { c: 3}};</span>
+</pre></table></code></div></div><p>만약 복사하는 프로퍼티가 객체에 대한 참조라면 참조값을 복사해오기 때문에 얕은 복사가된다.</p><p>다음과 같이 JSON 메서드를 사용해서 깊은 복사를 할 수 있다.</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="nx">obj1</span> <span class="o">=</span> <span class="p">{</span> <span class="na">a</span><span class="p">:</span> <span class="mi">0</span> <span class="p">,</span> <span class="na">b</span><span class="p">:</span> <span class="p">{</span> <span class="na">c</span><span class="p">:</span> <span class="mi">0</span><span class="p">}};</span>
+<span class="kd">const</span> <span class="nx">obj3</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">obj1</span><span class="p">));</span>
+<span class="nx">obj1</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="nx">obj1</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="c1">// obj1 { a: 4 , b: { c: 4}};</span>
+<span class="c1">// obj3 { a: 0 , b: { c: 0}};</span>
+</pre></table></code></div></div><h2 id="objectcreate">Object.create()<a href="#objectcreate"><i class="fas fa-hashtag"></i></a></h2></h2><blockquote><p>지정된 프로토타입 객체 및 속성(property)을 갖는 새 객체를 만듭니다.</p></blockquote><p>위에서 언급한 객체를 만드는 방법 중 하나이다.</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">};</span>
+<span class="c1">// a ---&gt; Object.prototype ---&gt; null</span>
+
+<span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+<span class="c1">// b ---&gt; a ---&gt; Object.prototype ---&gt; null</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// 1 (상속됨)</span>
+
+<span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+<span class="c1">// c ---&gt; b ---&gt; a ---&gt; Object.prototype ---&gt; null</span>
+</pre></table></code></div></div><p>프로토타입 체인을 이용해서 상속된 객체를 생성할 수 있다.</p><h3 id="순수-사전식-객체">순수 사전식 객체<a href="#순수-사전식-객체"><i class="fas fa-hashtag"></i></a></h3></h3><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="c1">// obj ---&gt; null</span>
+</pre></table></code></div></div><p>이런식으로 프로토타입이 없는 객체를 생성할 수도 있는데 이를 <code class="language-plaintext highlighter-rouge">‘아주 단순한(very plain)’ 혹은 ‘순수 사전식(pure dictionary)’ 객체</code>라고 부르는데 <code class="language-plaintext highlighter-rouge">Object</code>나 <code class="language-plaintext highlighter-rouge">{...}(리터럴)</code> 방식으로 생성한 객체보다 훨씬 단순하다.</p><p>이 순수 사전식 객체는 프로토타입으로 <code class="language-plaintext highlighter-rouge">Object.prototype</code>를 가지고 있지 않기 때문에 <code class="language-plaintext highlighter-rouge">toString()</code>과 같은 메서드를 사용할 수 없다.</p><blockquote><p><code class="language-plaintext highlighter-rouge">Object.create(null)</code>을 사용하면 프로토타입이 없는 객체를 만들 수 있습니다. 이런 객체는 <code class="language-plaintext highlighter-rouge">"__proto__"</code>를 키로 사용해도 문제를 일으키지 않기 때문에 커스텀 사전을 만들 때 유용합니다.</p></blockquote><p>라고 하는데.. 개발하면서 객체의 key값으로 <code class="language-plaintext highlighter-rouge">__proto__</code>를 사용할 일이 있기나 할까 라는 의문이 든다.</p><h3 id="상속">상속<a href="#상속"><i class="fas fa-hashtag"></i></a></h3></h3><p>생성자 함수의 상속에 사용할 수도 있다.</p><p>사람을 나타내는 Human 과 자식인 Student 생성자들이 있다고 가정하자.</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="kd">function</span> <span class="nx">Human</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Human</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></table></code></div></div><p>Human은 sayName이라는 메서드를 가지고 있으며 인스턴스에 할당된 name을 출력한다.</p><p>이제 Student 생성자 함수를 만들어보자</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre><span class="kd">function</span> <span class="nx">Student</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">Human</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">...</span><span class="nx">arguments</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>Student의 prototype을 Human prototype을 가르키게해서 sayName을 사용할 수 있게 해주자</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="nx">Student</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">Human</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">human</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Human</span><span class="p">(</span><span class="dl">'</span><span class="s1">human</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">student</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Student</span><span class="p">(</span><span class="dl">'</span><span class="s1">student</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">human</span><span class="p">.</span><span class="nx">sayName</span><span class="p">();</span> <span class="c1">// human</span>
+<span class="nx">student</span><span class="p">.</span><span class="nx">sayName</span><span class="p">();</span> <span class="c1">// student</span>
+</pre></table></code></div></div><p>잘 된 것 같지만 문제가 하나 있다</p><p><img data-proofer-ignore data-src="https://user-images.githubusercontent.com/45571631/146224587-a5bf16d1-1bde-4c43-a579-373b2eb55b60.png" alt="image" /></p><p>Human의 prototype을 Student prototype에 그대로 초기화 해주었기 때문에 생성자 함수가 그대로 <code class="language-plaintext highlighter-rouge">Human(name)</code>인 것을 확인할 수 있다. Student prototype의 생성자를 다시 Student로 돌려주자</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="nx">Student</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="kd">constructor</span> <span class="o">=</span> <span class="nx">Student</span><span class="p">;</span>
+</pre></table></code></div></div><p><img data-proofer-ignore data-src="https://user-images.githubusercontent.com/45571631/146225132-8ed88658-7439-414c-a9c8-91198a47e7c4.png" alt="image" /></p><p>이번엔 Human의 prototype 생성자 함수가 Student로 바뀌었다.. 이 지옥에서 벗어나기 위해서 사용하는 것이 <code class="language-plaintext highlighter-rouge">Object.create()</code>이다.</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre><td class="rouge-code"><pre><span class="kd">function</span> <span class="nx">Human</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Human</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">Student</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">Human</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">...</span><span class="nx">arguments</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">Student</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">Human</span><span class="p">.</span><span class="nx">prototype</span><span class="p">);</span>
+<span class="nx">Student</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="kd">constructor</span> <span class="o">=</span> <span class="nx">Student</span><span class="p">;</span>
+</pre></table></code></div></div><p><img data-proofer-ignore data-src="https://user-images.githubusercontent.com/45571631/146225484-0486ebda-42ff-493e-a941-9df18925dc69.png" alt="image" /></p><h2 id="objectdefineproperty">Object.defineProperty()<a href="#objectdefineproperty"><i class="fas fa-hashtag"></i></a></h2></h2><p>이하 예전 <a href="https://code-anthropoid.tistory.com/269">블로그</a> 복붙</p><p><code class="language-plaintext highlighter-rouge">Object.defineProperty(객체, 프로퍼티, 설명)</code> 정적 메서드는 객체에 직접 새로운 속성을 정의하거나 이미 존재하는 속성을 수정한 후, 그 객체를 반환한다</p><p>MDN에 나와있는 정의.</p><p>말이 어려운데 쉽게 설명하자면 <code class="language-plaintext highlighter-rouge">객체</code> 내부에 있는 <code class="language-plaintext highlighter-rouge">프로퍼티</code>에 <code class="language-plaintext highlighter-rouge">설명</code>을 따라서 해당하는 속성을 정의하거나 수정하고 다시 <code class="language-plaintext highlighter-rouge">객체</code>를 반환하는 Object의 정적 메서드이다</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{};</span>
+
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="dl">'</span><span class="s1">value</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">value</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span>
+<span class="p">});</span> <span class="c1">// 이 때 반환값은 obj 객체</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span> <span class="c1">// {value: 1000}</span>
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">defineProperty</code> 에서 설명은 보다시피 객체로 서술되며 데이터 서술자와, 접근자 서술자 두 가지 종류로 나뉘게 된다</p><p>좀 더 자세한 설명들은 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty 에 나와있고</p><p>내가 알아볼 것은 접근자 서술자이다</p><p>접근자 서술자는 <code class="language-plaintext highlighter-rouge">class</code>의 <code class="language-plaintext highlighter-rouge">setter</code>와 <code class="language-plaintext highlighter-rouge">getter</code>를 일반 객체에서도 적용시켜주는 역할을 한다고 보면 된다</p><p>먼저 익숙한 클래스의 <code class="language-plaintext highlighter-rouge">setter</code>와 <code class="language-plaintext highlighter-rouge">getter</code>를 살펴보자</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="kd">class</span> <span class="nx">Obj</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="nx">a</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">get</span> <span class="nx">getA</span><span class="p">(){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">a</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">set</span> <span class="nx">setA</span><span class="p">(</span><span class="nx">nextValue</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">set</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="nx">nextValue</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Obj</span><span class="p">(</span><span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">getA</span><span class="p">;</span> <span class="c1">// obj.a =&gt; 'test'</span>
+<span class="c1">// console log print 'get'</span>
+<span class="nx">obj</span><span class="p">.</span><span class="nx">setA</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">asdf</span><span class="dl">'</span><span class="p">;</span> <span class="c1">// obj.a =&gt; 'asdf'</span>
+<span class="c1">// console log print 'set'</span>
+</pre></table></code></div></div><p>클래스에서는 <code class="language-plaintext highlighter-rouge">obj</code> 내부의 값이 바뀔 때 무언가 로직을 추가해 줄 수 있다</p><p><code class="language-plaintext highlighter-rouge">defineProperty</code> 의 접근 서술자도 마찬가지다 클래스가 아닌 일반 객체 내부의 값을 수정, 접근할 때</p><p>그 행동을 가로채서 내가 원하는 다른 로직을 끼워넣고 반환시킬 수 있게 해주는 <code class="language-plaintext highlighter-rouge">get</code>과 <code class="language-plaintext highlighter-rouge">set</code>을 설정할 수 있다</p><div class="language-js highlighter-rouge"><div class="code-header"> <span label-text="JavaScript"><i class="fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre><td class="rouge-code"><pre><span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{};</span>
+
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="kd">get</span><span class="p">(){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_a</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="kd">set</span><span class="p">(</span><span class="nx">nextValue</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">set</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_a</span> <span class="o">=</span> <span class="nx">nextValue</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">obj</span><span class="p">.</span><span class="nx">a</span> <span class="c1">// obj.a =&gt; undefined</span>
+<span class="c1">// console log print 'get'</span>
+
+<span class="nx">obj</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span> <span class="c1">// obj.a =&gt; test</span>
+<span class="c1">// console log print 'set'</span>
+</pre></table></code></div></div><p><code class="language-plaintext highlighter-rouge">obj</code> 객체의 <code class="language-plaintext highlighter-rouge">a</code>라는 프로퍼티에 대해서 <code class="language-plaintext highlighter-rouge">get</code>과 <code class="language-plaintext highlighter-rouge">set</code>을 설정하는 코드이다</p><p>여기서 <code class="language-plaintext highlighter-rouge">this._a</code> 에 접근하는 코드에서 나는 헷갈림이 있었다 이해를 돕기위한 간단 설명을 해보자면</p><p>(<code class="language-plaintext highlighter-rouge">this</code> 는 <code class="language-plaintext highlighter-rouge">obj</code>를 가르킨다)</p><p><code class="language-plaintext highlighter-rouge">this.a</code>에 바로 접근하게 코드를 수정했다고 생각하고 코드의 실행 과정을 살펴보자</p><ol><li><code class="language-plaintext highlighter-rouge">obj.a</code> 라는 코드로 <code class="language-plaintext highlighter-rouge">a</code>에 접근하게 되어 <code class="language-plaintext highlighter-rouge">get()</code>을 호출한다<li><code class="language-plaintext highlighter-rouge">console.log('get')</code>을 호출한다<li><code class="language-plaintext highlighter-rouge">this.a</code> 는 <code class="language-plaintext highlighter-rouge">obj.a</code> 이므로 다시 <code class="language-plaintext highlighter-rouge">get()</code> 을 호출한다<li>1~3 무한 반복</ol><p>그래서 <code class="language-plaintext highlighter-rouge">obj.a</code>에 바로 접근하면 해당 프로퍼티에 직접 접근하는 것이 아닌 내부에만 존재하는 것으로 취급하는 <code class="language-plaintext highlighter-rouge">_a</code>로 연결시키고 접근하고 수정하는 것이다</p><hr /><blockquote><p><a href="https://www.nextree.co.kr/p7323/">JavaScript : 프로토타입(prototype) 이해</a></p><p><a href="https://ko.javascript.info/prototype-methods">프로토타입 메서드와 __proto__가 없는 객체</a></p><p><a href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object">MDN, Object</a></p></blockquote></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/javascript/'>JavaScript</a>, <a href='/categories/quiz/'>Quiz</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/quiz/" class="post-tag no-text-decoration" >Quiz</a> <a href="/tags/object/" class="post-tag no-text-decoration" >Object</a> <a href="/tags/create/" class="post-tag no-text-decoration" >create</a> <a href="/tags/assign/" class="post-tag no-text-decoration" >assign</a> <a href="/tags/defineproperty/" class="post-tag no-text-decoration" >defineProperty</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recent Update</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/HTTP/">HTTP</a><li><a href="/posts/HTTPS/">HTTPS</a><li><a href="/posts/Web_Worker/">Web Worker</a><li><a href="/posts/Get_Post_and_Cache/">Get, Post, Cache</a><li><a href="/posts/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80_VSync/">브라우저는 VSync를 어떻게 활용하고 있을까?</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/quiz/">Quiz</a> <a class="post-tag" href="/tags/react/">React</a> <a class="post-tag" href="/tags/assign/">assign</a> <a class="post-tag" href="/tags/ca/">CA</a> <a class="post-tag" href="/tags/cache/">cache</a> <a class="post-tag" href="/tags/composite/">Composite</a> <a class="post-tag" href="/tags/cors/">CORS</a> <a class="post-tag" href="/tags/create/">create</a> <a class="post-tag" href="/tags/defineproperty/">defineProperty</a> <a class="post-tag" href="/tags/get/">get</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="tail-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/iterator/"><div class="card-body"> <em class="timeago small" date="2021-12-20 15:36:00 +0900" >Dec 20, 2021</em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>iterator</h3><div class="text-muted small"><p> Iterator 이터레이터를 알기 전에 용어를 간단하게 정리하고 가자 iterator next() 메서드를 가지고 있는 객체로 [Symbol.iterator]에 의해 생성된다. next()메서드는 반드시 {done: boolean [, value: any]} 꼴의 객체를 반환해야한다. iterable 반복 가능한 이라는 뜻을 나타내며 ite...</p></div></div></a></div><div class="card"> <a href="/posts/Web_Worker/"><div class="card-body"> <em class="timeago small" date="2022-01-03 22:46:00 +0900" >Jan 3</em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Web Worker</h3><div class="text-muted small"><p> Web Worker 익히 알다시피 자바스크립트는 싱글 스레드이며 그 자체로는 써먹기 힘들기 때문에 V8, node 엔진 등을 이용해서 비동기를 이용해 그 문제점을 어느정도 극복하고 있다. 비동기 작업의 한계 하지만 그러한 비동기 작업들도 만능은 아니다. 다음과 같은 일을 할 경우 메인 스레드가 block되면서 원활한 작업이 이루어지지 않게된다. ...</p></div></div></a></div><div class="card"> <a href="/posts/variable_hoisting/"><div class="card-body"> <em class="timeago small" date="2021-12-18 17:56:00 +0900" >Dec 18, 2021</em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>var, let, const, 호이스팅</h3><div class="text-muted small"><p> var, let, const var var은 요즘은 잘 쓰이고 있지 않지만 그래도 간단하게 짚고 넘어가자 함수 레벨의 스코프를 가지고 있으며 중복 선언이 가능하고 키워드의 생략이 가능하다 문제점 중복 선언 중복 선언이 가능하기 때문에 프로그래머가 같은 변수명으로 초기화할 수 있는 문제가 생긴다. 1 2 3 var test = 1; ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80_VSync/" class="btn btn-outline-primary" prompt="Older"><p>브라우저는 VSync를 어떻게 활용하고 있을까?</p></a> <a href="/posts/variable_hoisting/" class="btn btn-outline-primary" prompt="Newer"><p>var, let, const, 호이스팅</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center text-muted"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://twitter.com/username">ludacirs</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/quiz/">Quiz</a> <a class="post-tag" href="/tags/react/">React</a> <a class="post-tag" href="/tags/assign/">assign</a> <a class="post-tag" href="/tags/ca/">CA</a> <a class="post-tag" href="/tags/cache/">cache</a> <a class="post-tag" href="/tags/composite/">Composite</a> <a class="post-tag" href="/tags/cors/">CORS</a> <a class="post-tag" href="/tags/create/">create</a> <a class="post-tag" href="/tags/defineproperty/">defineProperty</a> <a class="post-tag" href="/tags/get/">get</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.16.1,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script>
